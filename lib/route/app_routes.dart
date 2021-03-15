@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_video/blocs/provider/bloc_provider.dart';
-import 'package:flutter_video/blocs/video_bloc.dart';
+import 'package:flutter_video/ui/camera/video_cam_player.dart';
+import 'package:flutter_video/ui/camera/video_cam_view.dart';
 import 'package:flutter_video/ui/home.dart';
 import 'package:flutter_video/ui/player/video_player_view.dart';
 import 'package:flutter_video/utils/constant.dart';
@@ -12,14 +12,27 @@ class AppRoutes {
       case RoutePath.home:
         {
           return MaterialPageRoute(
-            builder: (_) => BlocProvider(child: Home(), bloc: VideoBloc()),
+            builder: (_) => Home(),
           );
         }
       case RoutePath.player:
         {
           final PathArguments args = routeSettings.arguments;
           return MaterialPageRoute(
-            builder: (_) => BlocProvider(child: VideoPlayerView(args.video), bloc: VideoBloc()),
+            builder: (_) => VideoPlayerView(args.video),
+          );
+        }
+      case RoutePath.videoRecord:
+        {
+          return MaterialPageRoute(
+            builder: (_) => VideoCamView(),
+          );
+        }
+      case RoutePath.playVideo:
+        {
+          final PathArguments args = routeSettings.arguments;
+          return MaterialPageRoute(
+            builder: (_) => VideoCamPlayer(args.video),
           );
         }
       default:

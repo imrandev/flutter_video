@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_video/model/video.dart';
+import 'package:flutter_video/network/local/entity/media.dart';
 import 'package:flutter_video/ui/widgets/dialog_video_player.dart';
-import 'package:flutter_video/utils/constant.dart';
-import 'package:flutter_video/utils/path_arguments.dart';
 
 class VideoListView extends StatelessWidget {
 
-  final List<Video> videoList;
+  final List<Media> videoList;
 
   VideoListView(this.videoList);
 
@@ -33,7 +32,7 @@ class VideoListView extends StatelessWidget {
           child: Card(
             child: Container(
               child: ListTile(
-                leading: Image.asset(videoList[index].image),
+                leading: Image.asset('assets/play.png'),
                 title: Text(
                   '${videoList[index].title}',
                 ),

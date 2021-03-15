@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_video/model/video.dart';
+import 'package:flutter_video/network/local/entity/media.dart';
 import 'package:flutter_video/ui/player/chewie_video_player.dart';
 
 class DialogVideoPlayer extends StatelessWidget {
 
-  final Video video;
+  final Media video;
 
   DialogVideoPlayer(this.video);
 

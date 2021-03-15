@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_video/blocs/provider/bloc_provider.dart';
 import 'package:flutter_video/blocs/video_bloc.dart';
-import 'package:flutter_video/model/video.dart';
+import 'package:flutter_video/network/local/entity/media.dart';
 import 'package:flutter_video/ui/list/video_list_view.dart';
+import 'package:flutter_video/utils/constant.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     VideoBloc _videoBloc = BlocProvider.of<VideoBloc>(context);
-    _videoBloc.init(context);
     return Scaffold(
       appBar: AppBar(
         leading: Icon(
@@ -22,7 +22,7 @@ class Home extends StatelessWidget {
           ),
         ),
       ),
-      body: StreamBuilder<List<Video>>(
+      body: StreamBuilder<List<Media>>(
         builder: (context, snapshot) {
           return snapshot.hasData
               ? VideoListView(snapshot.data)
@@ -31,6 +31,15 @@ class Home extends StatelessWidget {
                 );
         },
         stream: _videoBloc.videoListStream,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, RoutePath.videoRecord);
+        },
+        child: Icon(
+          Icons.video_call,
+          color: Colors.white,
+        ),
       ),
     );
   }

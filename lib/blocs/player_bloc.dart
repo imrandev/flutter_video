@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_video/blocs/enums/player_state.dart';
 import 'package:flutter_video/blocs/provider/bloc_provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -17,5 +18,10 @@ class PlayerBloc extends BlocBase {
   @override
   void dispose() {
     _playerStateBehavior.close();
+  }
+
+  @override
+  void init(BuildContext context) {
+
   }
 }

@@ -2,11 +2,12 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_video/model/video.dart';
+import 'package:flutter_video/network/local/entity/media.dart';
 import 'package:video_player/video_player.dart';
 
 class ChewieVideoPlayer extends StatefulWidget {
 
-  final Video video;
+  final Media video;
 
   ChewieVideoPlayer(this.video);
 
@@ -41,19 +42,17 @@ class _ChewiePlayerState extends State<ChewieVideoPlayer> {
       videoPlayerController: _videoPlayerController,
       autoPlay: true,
       looping: true,
+      allowPlaybackSpeedChanging: false,
       // Try playing around with some of these other options:
 
       // showControls: false,
-      // materialProgressColors: ChewieProgressColors(
-      //   playedColor: Colors.red,
-      //   handleColor: Colors.blue,
-      //   backgroundColor: Colors.grey,
-      //   bufferedColor: Colors.lightGreen,
-      // ),
-      // placeholder: Container(
-      //   color: Colors.grey,
-      // ),
-      // autoInitialize: true,
+      materialProgressColors: ChewieProgressColors(
+        playedColor: Colors.red,
+        handleColor: Colors.blue,
+        backgroundColor: Colors.grey,
+        bufferedColor: Colors.lightGreen,
+      ),
+      autoInitialize: true,
     );
     setState(() {});
   }
@@ -62,7 +61,7 @@ class _ChewiePlayerState extends State<ChewieVideoPlayer> {
   Widget build(BuildContext context) {
     return _chewieController != null &&
         _chewieController
-            .videoPlayerController.value.initialized
+            .videoPlayerController.value.isInitialized
         ? Chewie(
       controller: _chewieController,
     ) : Center(
