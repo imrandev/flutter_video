@@ -14,4 +14,7 @@ abstract class MediaDao {
 
   @Query('Select * from Media order by id desc limit 1')
   Future<Media> findLastMedia();
+
+  @delete
+  Future<void> deleteMedia(Media media);
 }

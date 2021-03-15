@@ -224,7 +224,7 @@ class _VideoCamState extends State<VideoCamView> {
                   fileType: "webm",
                 );
                 // save file info to local database
-                _videoBloc.saveVideoToLocal(_video).whenComplete(
+                _videoBloc.saveVideo(_video).whenComplete(
                   () {
                     // show preview of video file
                     Navigator.pushNamed(

@@ -106,6 +106,17 @@ class _$MediaDao extends MediaDao {
                   'playbackUrl': item.playbackUrl,
                   'fileType': item.fileType
                 },
+            changeListener),
+        _mediaDeletionAdapter = DeletionAdapter(
+            database,
+            'Media',
+            ['id'],
+            (Media item) => <String, dynamic>{
+                  'id': item.id,
+                  'title': item.title,
+                  'playbackUrl': item.playbackUrl,
+                  'fileType': item.fileType
+                },
             changeListener);
 
   final sqflite.DatabaseExecutor database;
@@ -115,6 +126,8 @@ class _$MediaDao extends MediaDao {
   final QueryAdapter _queryAdapter;
 
   final InsertionAdapter<Media> _mediaInsertionAdapter;
+
+  final DeletionAdapter<Media> _mediaDeletionAdapter;
 
   @override
   Future<List<Media>> findAll() async {
@@ -152,5 +165,10 @@ class _$MediaDao extends MediaDao {
   @override
   Future<void> insertMedia(Media media) async {
     await _mediaInsertionAdapter.insert(media, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteMedia(Media media) async {
+    await _mediaDeletionAdapter.delete(media);
   }
 }

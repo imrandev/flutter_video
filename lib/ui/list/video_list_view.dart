@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_video/model/video.dart';
+import 'package:flutter_video/blocs/provider/bloc_provider.dart';
+import 'package:flutter_video/blocs/video_bloc.dart';
 import 'package:flutter_video/network/local/entity/media.dart';
 import 'package:flutter_video/ui/widgets/dialog_video_player.dart';
 
@@ -11,6 +12,9 @@ class VideoListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    VideoBloc _videoBloc = BlocProvider.of<VideoBloc>(context);
+
     return ListView.builder(
       itemCount: videoList.length,
       itemBuilder: (context, index) {
@@ -27,17 +31,33 @@ class VideoListView extends StatelessWidget {
                     },
                   );
                 },
-                child: Text(
-                  '${videoList[index].title}',
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                  child: Text(
+                    '${videoList[index].title}',
+                  ),
                 ),
               ),
-              trailing: IconButton(
-                icon: Icon(
-                  Icons.cloud_upload,
-                ),
-                onPressed: () {
-                  
-                },
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.delete_outline,
+                    ),
+                    onPressed: () {
+                      _videoBloc.deleteVideo(videoList[index]);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.cloud_upload,
+                    ),
+                    onPressed: () {
+
+                    },
+                  ),
+                ],
               ),
             ),
           ),

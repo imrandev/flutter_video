@@ -35,5 +35,10 @@ class FileUtil {
     return File(oldPath).copy(newPath);
   }
 
+  Future<bool> delete(String filePath) async{
+    var entity = await File(filePath).delete();
+    return entity.exists();
+  }
+
   String _timestamp() => new DateTime.now().millisecondsSinceEpoch.toString();
 }
