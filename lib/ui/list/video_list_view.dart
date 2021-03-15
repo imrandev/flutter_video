@@ -14,28 +14,30 @@ class VideoListView extends StatelessWidget {
     return ListView.builder(
       itemCount: videoList.length,
       itemBuilder: (context, index) {
-        return InkWell(
-          onTap: (){
-            /*Navigator.pushNamed(context, RoutePath.player,
-              arguments: PathArguments(
-                video: videoList[index],
-              ),
-            );*/
-
-            showDialog<void>(
-              context: context,
-              builder: (BuildContext context) {
-                return DialogVideoPlayer(videoList[index]);
-              },
-            );
-          },
-          child: Card(
-            child: Container(
-              child: ListTile(
-                leading: Image.asset('assets/play.png'),
-                title: Text(
+        return Card(
+          child: Container(
+            child: ListTile(
+              leading: Image.asset('assets/play.png'),
+              title: InkWell(
+                onTap: (){
+                  showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return DialogVideoPlayer(videoList[index]);
+                    },
+                  );
+                },
+                child: Text(
                   '${videoList[index].title}',
                 ),
+              ),
+              trailing: IconButton(
+                icon: Icon(
+                  Icons.cloud_upload,
+                ),
+                onPressed: () {
+                  
+                },
               ),
             ),
           ),

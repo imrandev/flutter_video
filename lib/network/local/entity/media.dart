@@ -6,5 +6,7 @@ class Media {
   final int id;
   final String title;
   final String playbackUrl;
-  Media(this.id, this.title, this.playbackUrl);
+  final String fileType;
+
+  Media(this.id, this.title, this.playbackUrl, this.fileType);
 }

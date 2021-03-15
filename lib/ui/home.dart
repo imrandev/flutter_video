@@ -25,7 +25,11 @@ class Home extends StatelessWidget {
       body: StreamBuilder<List<Media>>(
         builder: (context, snapshot) {
           return snapshot.hasData
-              ? VideoListView(snapshot.data)
+              ? snapshot.data != null && snapshot.data.isNotEmpty
+                  ? VideoListView(snapshot.data)
+                  : Center(
+                      child: Text("No videos found"),
+                    )
               : Center(
                   child: CircularProgressIndicator(),
                 );

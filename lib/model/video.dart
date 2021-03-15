@@ -3,8 +3,9 @@ class Video {
   String title;
   String playbackUrl;
   String image;
+  String fileType;
 
-  Video({this.id, this.title, this.playbackUrl, this.image});
+  Video({this.id, this.title, this.playbackUrl, this.image, this.fileType});
 
   Video.fromJson(Map<String, dynamic> json) {
     id = json['id'];

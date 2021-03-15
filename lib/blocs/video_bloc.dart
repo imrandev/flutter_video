@@ -36,7 +36,7 @@ class VideoBloc extends BlocBase {
       if (media != null) {
         id = media.id + 1;
       }
-      final newMedia = Media(id, video.title, video.playbackUrl);
+      final newMedia = Media(id, video.title, video.playbackUrl, video.fileType);
       await mediaDao.insertMedia(newMedia);
       List<Media> mediaList = _videoListBehavior.value;
       mediaList.add(newMedia);

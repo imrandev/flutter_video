@@ -209,18 +209,19 @@ class _VideoCamState extends State<VideoCamView> {
       return;
     }
     try {
-      String newFilePath = await FileUtil().getFilePath();
+      String newFilePath = await FileUtil().getFilePath("webm");
       String filename = FileUtil().getFilename();
       await controller.stopVideoRecording().then(
         (value) {
           // file copy from cache into the new destination
-          File(value.path).copy(newFilePath).then(
+          FileUtil().copyFile(value.path, newFilePath).then(
             (file) async {
               if (await file.exists()) {
                 print("Video saved in ${file.path}");
                 Video _video = new Video(
                   title: filename,
                   playbackUrl: newFilePath,
+                  fileType: "webm",
                 );
                 // save file info to local database
                 _videoBloc.saveVideoToLocal(_video).whenComplete(

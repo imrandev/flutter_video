@@ -25,7 +25,7 @@ class VideoCamPlayer extends StatelessWidget {
         ),
       ),
       body: Container(
-        child: ChewieVideoPlayer(new Media(1, video.title, video.playbackUrl,),),
+        child: ChewieVideoPlayer(new Media(1, video.title, video.playbackUrl, ""),),
       ),
     );
   }

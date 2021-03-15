@@ -80,7 +80,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Media` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `playbackUrl` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `Media` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `playbackUrl` TEXT, `fileType` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -103,7 +103,8 @@ class _$MediaDao extends MediaDao {
             (Media item) => <String, dynamic>{
                   'id': item.id,
                   'title': item.title,
-                  'playbackUrl': item.playbackUrl
+                  'playbackUrl': item.playbackUrl,
+                  'fileType': item.fileType
                 },
             changeListener);
 
@@ -118,8 +119,11 @@ class _$MediaDao extends MediaDao {
   @override
   Future<List<Media>> findAll() async {
     return _queryAdapter.queryList('select * from Media',
-        mapper: (Map<String, dynamic> row) => Media(row['id'] as int,
-            row['title'] as String, row['playbackUrl'] as String));
+        mapper: (Map<String, dynamic> row) => Media(
+            row['id'] as int,
+            row['title'] as String,
+            row['playbackUrl'] as String,
+            row['fileType'] as String));
   }
 
   @override
@@ -128,15 +132,21 @@ class _$MediaDao extends MediaDao {
         arguments: <dynamic>[id],
         queryableName: 'Media',
         isView: false,
-        mapper: (Map<String, dynamic> row) => Media(row['id'] as int,
-            row['title'] as String, row['playbackUrl'] as String));
+        mapper: (Map<String, dynamic> row) => Media(
+            row['id'] as int,
+            row['title'] as String,
+            row['playbackUrl'] as String,
+            row['fileType'] as String));
   }
 
   @override
   Future<Media> findLastMedia() async {
     return _queryAdapter.query('Select * from Media order by id desc limit 1',
-        mapper: (Map<String, dynamic> row) => Media(row['id'] as int,
-            row['title'] as String, row['playbackUrl'] as String));
+        mapper: (Map<String, dynamic> row) => Media(
+            row['id'] as int,
+            row['title'] as String,
+            row['playbackUrl'] as String,
+            row['fileType'] as String));
   }
 
   @override

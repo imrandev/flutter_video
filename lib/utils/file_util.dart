@@ -14,29 +14,25 @@ class FileUtil {
 
   FileUtil._internal();
 
-  Future<String> getFilePath() async {
+  Future<String> getFilePath(String fileType) async {
     final Directory extDir = await getExternalStorageDirectory();
     print("Document directory : ${extDir.path}");
     final String dirPath = '${extDir.path}/Videos';
     await new Directory(dirPath).create(recursive: true);
     _filename = _timestamp();
-    return '$dirPath/$_filename.webm';
+    return '$dirPath/$_filename.$fileType';
   }
 
   String getFilename(){
     return _filename;
   }
 
-  Future<File> getFile() async {
-    return File(await getFilePath());
+  Future<File> getFile(String fileType) async {
+    return File(await getFilePath(fileType));
   }
 
-  void saveFile(String filepath){
-    try {
-      File(filepath);
-    } catch(e){
-      print(e.toString());
-    }
+  Future<File> copyFile(String oldPath, String newPath){
+    return File(oldPath).copy(newPath);
   }
 
   String _timestamp() => new DateTime.now().millisecondsSinceEpoch.toString();
