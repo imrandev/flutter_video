@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter_video/model/video.dart';
 import 'package:flutter_video/network/local/dao/media_dao.dart';
 import 'package:flutter_video/network/local/entity/media.dart';
+import 'package:flutter_video/network/remote/api_provider.dart';
+import 'package:flutter_video/network/remote/model/upload_response.dart';
 import 'package:flutter_video/utils/file_util.dart';
 
 abstract class BaseRepository<T, P> {
@@ -40,5 +44,9 @@ class VideoRepository extends BaseRepository<Media, Video> {
       return true;
     }
     return false;
+  }
+
+  Future<UploadResponse> uploadVideo(File file) {
+    return ApiProvider().uploadFile(file);
   }
 }

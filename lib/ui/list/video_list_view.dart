@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_video/blocs/provider/bloc_provider.dart';
 import 'package:flutter_video/blocs/video_bloc.dart';
 import 'package:flutter_video/network/local/entity/media.dart';
+import 'package:flutter_video/network/remote/model/upload_response.dart';
 import 'package:flutter_video/ui/widgets/dialog_video_player.dart';
+import 'package:flutter_video/utils/constant.dart';
 
 class VideoListView extends StatelessWidget {
 
@@ -12,8 +14,13 @@ class VideoListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     VideoBloc _videoBloc = BlocProvider.of<VideoBloc>(context);
+
+    _videoBloc.fileUploadStream.listen((event) {
+      if (event != null && event.message != null) {
+        print(event.message);
+      }
+    });
 
     return ListView.builder(
       itemCount: videoList.length,
@@ -23,7 +30,7 @@ class VideoListView extends StatelessWidget {
             child: ListTile(
               leading: Image.asset('assets/play.png'),
               title: InkWell(
-                onTap: (){
+                onTap: () {
                   showDialog<void>(
                     context: context,
                     builder: (BuildContext context) {
@@ -49,13 +56,22 @@ class VideoListView extends StatelessWidget {
                       _videoBloc.deleteVideo(videoList[index]);
                     },
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.cloud_upload,
-                    ),
-                    onPressed: () {
-
+                  StreamBuilder<UploadResponse>(
+                    builder: (context, snapshot) {
+                      return snapshot.hasData && snapshot.data.statuscode == ApiStatus.crudSuccess
+                          ? Icon(
+                        Icons.check_circle_outline,
+                      ) : IconButton(
+                        icon: Icon(
+                          Icons.cloud_upload,
+                        ),
+                        onPressed: () {
+                          _videoBloc
+                              .uploadVideo(videoList[index].playbackUrl);
+                        },
+                      );
                     },
+                    stream: _videoBloc.fileUploadStream,
                   ),
                 ],
               ),

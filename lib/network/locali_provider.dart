@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_video/model/video.dart';
 
-class ApiProvider {
-  static final ApiProvider _instance = ApiProvider._internal();
+class LocalProvider {
+  static final LocalProvider _instance = LocalProvider._internal();
 
-  factory ApiProvider() {
+  factory LocalProvider() {
     return _instance;
   }
 
-  ApiProvider._internal();
+  LocalProvider._internal();
 
   // load local json file from assets
   Future<String> loadJsonFromLocalPath(BuildContext context){
