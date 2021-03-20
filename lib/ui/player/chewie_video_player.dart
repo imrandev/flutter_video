@@ -1,7 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_video/model/video.dart';
 import 'package:flutter_video/network/local/entity/media.dart';
 import 'package:video_player/video_player.dart';
 
@@ -33,14 +32,11 @@ class _ChewiePlayerState extends State<ChewieVideoPlayer> {
   }
 
   Future<void> initializePlayer() async {
-    _videoPlayerController = VideoPlayerController.network(
-        '${widget.video.playbackUrl}');
-    await Future.wait([
-      _videoPlayerController.initialize()
-    ]);
+    _videoPlayerController = VideoPlayerController.network('${widget.video.playbackUrl}');
+    await _videoPlayerController.initialize();
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      autoPlay: true,
+      autoPlay: false,
       looping: true,
       allowPlaybackSpeedChanging: false,
       // Try playing around with some of these other options:
@@ -61,7 +57,7 @@ class _ChewiePlayerState extends State<ChewieVideoPlayer> {
   Widget build(BuildContext context) {
     return _chewieController != null &&
         _chewieController
-            .videoPlayerController.value.isInitialized
+            .videoPlayerController.value.initialized
         ? Chewie(
       controller: _chewieController,
     ) : Center(

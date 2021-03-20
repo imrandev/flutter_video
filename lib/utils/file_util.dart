@@ -15,7 +15,12 @@ class FileUtil {
   FileUtil._internal();
 
   Future<String> getFilePath(String fileType) async {
-    final Directory extDir = await getExternalStorageDirectory();
+    Directory extDir;
+    if (Platform.isIOS){
+      extDir = await getApplicationDocumentsDirectory();
+    } else {
+      extDir = await getExternalStorageDirectory();
+    }
     print("Document directory : ${extDir.path}");
     final String dirPath = '${extDir.path}/Videos';
     await new Directory(dirPath).create(recursive: true);
@@ -36,7 +41,8 @@ class FileUtil {
   }
 
   Future<bool> delete(String filePath) async{
-    var entity = await File(filePath).delete();
+    var entity = await File(filePath);
+    if ()
     return entity.exists();
   }
 
