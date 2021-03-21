@@ -35,6 +35,7 @@ dependencies:
   path_provider:
   floor: ^0.19.1
   dio: ^3.0.10
+  flutter_uploader: ^1.2.1
 
 dev_dependencies:
   flutter_test:

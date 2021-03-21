@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FileUtil {
@@ -41,4 +42,19 @@ class FileUtil {
   }
 
   String _timestamp() => new DateTime.now().millisecondsSinceEpoch.toString();
+
+  Future<File> getImageFile() async {
+    final filename = 'play.png';
+    var bytes = await rootBundle.load("assets/play.png");
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    writeToFile(bytes,'$dir/$filename');
+    File file = new File('$dir/$filename');
+    return file;
+  }
+
+  Future<void> writeToFile(ByteData data, String path) {
+    final buffer = data.buffer;
+    return new File(path).writeAsBytes(
+        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+  }
 }

@@ -2,8 +2,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_video/network/remote/model/question_response.dart';
 import 'package:flutter_video/network/remote/model/upload_response.dart';
 import 'package:flutter_video/utils/constant.dart';
+import 'package:flutter_video/utils/file_util.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiProvider {
@@ -23,32 +25,76 @@ class ApiProvider {
 
   ApiProvider._internal();
 
+  Future<QuestionResponse> findQuestions() async {
+    QuestionResponse _questionResponse = QuestionResponse();
+    _dio.interceptors.add(LogInterceptor());
+    await _dio.post(
+      Constant.uploadVideoResumeQuestionList,
+      data: <String, dynamic>{
+        "userId" : "4361771",
+        "decodeId" : "S8A8Qw",
+        "appId" : "1",
+        "lang" : "EN"
+      },
+      options: Options(
+        method: 'POST',
+        contentType: 'application/x-www-form-urlencoded',
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/x-www-form-urlencoded',
+        },
+      )
+    ).then((response) {
+      if (response.statusCode == ApiStatus.ok) {
+        _questionResponse = QuestionResponse.fromJson(response.data);
+      } else {
+        _questionResponse.statuscode = response.statusCode.toString();
+        _questionResponse.message = response.statusMessage;
+      }
+    }).catchError((e) {
+      _questionResponse.statuscode = "-1";
+      _questionResponse.message = e.toString();
+    });
+    return _questionResponse;
+  }
+
   Future<UploadResponse> uploadFile(File file) async {
+
+    file = await FileUtil().getImageFile();
+    UploadResponse _uploadResponse = new UploadResponse();
     String fileName = file.path.split('/').last;
-    MultipartFile _multiPartFile = MultipartFile.fromFileSync(
+    MultipartFile _multiPart = await MultipartFile.fromFile(
       file.path,
       filename: fileName,
     );
 
-    FormData formData = FormData.fromMap({
-      "userid" : "4361771",
-      "decodeid" : "S8A8Qw",
-      "questionid" : "1",
-      "questionduration" : "30",
-      "questionserialno" : "1",
-      "devicetype" : "Android",
-      "browserinfo" : "",
-      "appid" : "1",
+    /*FormData _formData = FormData.fromMap(<String, dynamic>{
+      "userId" : "4361771",
+      "decodeId" : "S8A8Qw",
+      "file" : _multiPart,
+      "questionId" : "1",
+      "questionDuration" : "30",
+      "questionSerialNo" : "1",
+      "browserInfo" : "",
+      "appId" : "1",
       "lang" : "EN"
-    });
+    });*/
 
-    formData.files.add(MapEntry("file", _multiPartFile));
-
-    UploadResponse _uploadResponse = new UploadResponse();
-
+    FormData formData = new FormData();
+    formData.fields.add(MapEntry("userId", "4361771"));
+    formData.fields.add(MapEntry("decodeId", "S8A8Qw"));
+    formData.fields.add(MapEntry("questionId", "1"));
+    formData.fields.add(MapEntry("questionDuration", "30"));
+    formData.fields.add(MapEntry("questionSerialNo", "1"));
+    formData.fields.add(MapEntry("deviceType", "Android"));
+    formData.fields.add(MapEntry("browserInfo", ""));
+    formData.fields.add(MapEntry("appId", "1"));
+    formData.fields.add(MapEntry("lang", "EN"));
+    formData.files.add(MapEntry("file", _multiPart));
     _dio.interceptors.add(LogInterceptor());
-
-    _dio.post(Constant.uploadVideoResumeAnswer, data: formData).then((response) {
+    _dio.post(Constant.uploadVideoResumeAnswer, data: formData, onSendProgress: (count, total) {
+      print("Send : $count");
+      print("Total : $total");
+    },).then((response) {
       if (response.statusCode == ApiStatus.ok) {
         _uploadResponse = UploadResponse.fromJson(response.data);
       } else {
@@ -57,7 +103,7 @@ class ApiProvider {
       }
     }).catchError((e) {
       _uploadResponse.statuscode = "-1";
-      _uploadResponse.message = e.error.message;
+      _uploadResponse.message = e.toString();
     });
     return _uploadResponse;
   }

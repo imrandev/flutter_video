@@ -6,6 +6,7 @@ import 'package:flutter_video/blocs/provider/bloc_provider.dart';
 import 'package:flutter_video/model/video.dart';
 import 'package:flutter_video/network/local/app_database.dart';
 import 'package:flutter_video/network/local/entity/media.dart';
+import 'package:flutter_video/network/remote/model/question_response.dart';
 import 'package:flutter_video/network/remote/model/upload_response.dart';
 import 'package:flutter_video/repository/video_repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -18,17 +19,23 @@ class VideoBloc extends BlocBase {
 
   final _fileUploadBehavior = BehaviorSubject<UploadResponse>();
 
+  final _questionsBehavior = BehaviorSubject<QuestionResponse>();
+
   Stream<List<Media>> get videoListStream => _videoListBehavior.stream;
 
   Stream<List<CameraDescription>> get cameraListStream => _cameraListBehavior.stream;
 
   Stream<UploadResponse> get fileUploadStream => _fileUploadBehavior.stream;
 
+  Stream<QuestionResponse> get questionsStream => _questionsBehavior.stream;
+
   Function(List<Media>) get _videoListSink => _videoListBehavior.sink.add;
 
   Function(List<CameraDescription>) get _cameraListSink => _cameraListBehavior.sink.add;
 
   Function(UploadResponse) get _fileUploadSink => _fileUploadBehavior.sink.add;
+
+  Function(QuestionResponse) get _questionsSink => _questionsBehavior.sink.add;
 
   VideoRepository _videoRepository;
 
@@ -64,11 +71,17 @@ class VideoBloc extends BlocBase {
     _fileUploadSink(await _videoRepository.uploadVideo(File(filepath)));
   }
 
+  void fetchQuestions() async {
+    QuestionResponse _questionResponse = await _videoRepository.fetchQuestionList();
+    _questionsSink(_questionResponse);
+  }
+
   @override
   void dispose() {
     _videoListBehavior.close();
     _cameraListBehavior.close();
     _fileUploadBehavior.close();
+    _questionsBehavior.close();
   }
 
   @override
@@ -79,6 +92,6 @@ class VideoBloc extends BlocBase {
     final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     // initialize repository
     _videoRepository = new VideoRepository(database.mediaDao);
-    _videoListSink(await _videoRepository.get());
+    fetchQuestions();
   }
 }

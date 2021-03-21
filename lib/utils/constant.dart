@@ -6,10 +6,12 @@ class RoutePath {
 }
 
 class Constant {
-  static const String baseUrl = "https://vdo.bdjobs.com";
+  // static const String baseUrl = "https://vdo.bdjobs.com";
+  static const String baseUrl = "https://my.bdjobs.com";
   static const String uploadVideoResumeAnswer = "/apps/mybdjobs/app_video_resume_upload_answer.asp";
+  static const String uploadVideoResumeQuestionList = "/apps/mybdjobs/v1/app_video_resume_questionlist.asp";
 
-  static const int connectionTimeout = 120000;
+  static const int connectionTimeout = 5000;
   static const int receiveTimeout = 30000;
 }
 

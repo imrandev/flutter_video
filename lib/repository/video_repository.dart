@@ -4,6 +4,7 @@ import 'package:flutter_video/model/video.dart';
 import 'package:flutter_video/network/local/dao/media_dao.dart';
 import 'package:flutter_video/network/local/entity/media.dart';
 import 'package:flutter_video/network/remote/api_provider.dart';
+import 'package:flutter_video/network/remote/model/question_response.dart';
 import 'package:flutter_video/network/remote/model/upload_response.dart';
 import 'package:flutter_video/utils/file_util.dart';
 
@@ -48,5 +49,9 @@ class VideoRepository extends BaseRepository<Media, Video> {
 
   Future<UploadResponse> uploadVideo(File file) {
     return ApiProvider().uploadFile(file);
+  }
+
+  Future<QuestionResponse> fetchQuestionList(){
+    return ApiProvider().findQuestions();
   }
 }
