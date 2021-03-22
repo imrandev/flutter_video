@@ -15,14 +15,14 @@ class FileUtil {
   FileUtil._internal();
 
   Future<String> getFilePath(String fileType) async {
-    Directory extDir;
+    Directory directory;
     if (Platform.isIOS){
-      extDir = await getApplicationDocumentsDirectory();
+      directory = await getApplicationDocumentsDirectory();
     } else {
-      extDir = await getExternalStorageDirectory();
+      directory = await getExternalStorageDirectory();
     }
-    print("Document directory : ${extDir.path}");
-    final String dirPath = '${extDir.path}/Videos';
+    print("Document directory : ${directory.path}");
+    final String dirPath = '${directory.path}/Videos';
     await new Directory(dirPath).create(recursive: true);
     _filename = _timestamp();
     return '$dirPath/$_filename.$fileType';
@@ -41,9 +41,11 @@ class FileUtil {
   }
 
   Future<bool> delete(String filePath) async{
-    var entity = await File(filePath);
-    if ()
-    return entity.exists();
+    var file = File(filePath);
+    if (await file.exists()){
+      file.delete();
+    }
+    return file.exists();
   }
 
   String _timestamp() => new DateTime.now().millisecondsSinceEpoch.toString();

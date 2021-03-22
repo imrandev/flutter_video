@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +34,14 @@ class _ChewiePlayerState extends State<ChewieVideoPlayer> {
   }
 
   Future<void> initializePlayer() async {
-    _videoPlayerController = VideoPlayerController.network('${widget.video.playbackUrl}');
+
+    String filepath = widget.video.playbackUrl;
+    print('$filepath');
+    _videoPlayerController = VideoPlayerController.file(File('$filepath'));
+    // _videoPlayerController = VideoPlayerController.network('https://vdo.bdjobs.com/Videos/Corporate//909911/185264754/185264754_2.webm');
+    // _videoPlayerController = VideoPlayerController.asset('assets/sample.mp4');
     await _videoPlayerController.initialize();
+
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       autoPlay: false,

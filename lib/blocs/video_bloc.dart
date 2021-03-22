@@ -66,5 +66,10 @@ class VideoBloc extends BlocBase {
     // initialize repository
     _videoRepository = new VideoRepository(database.mediaDao);
     _videoListSink(await _videoRepository.get());
+    saveVideo(new Video(
+      id: 23,
+      title: "sample",
+      playbackUrl: await _videoRepository.download(),
+    ));
   }
 }

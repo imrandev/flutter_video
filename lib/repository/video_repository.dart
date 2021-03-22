@@ -1,4 +1,5 @@
 import 'package:flutter_video/model/video.dart';
+import 'package:flutter_video/network/api_provider.dart';
 import 'package:flutter_video/network/local/dao/media_dao.dart';
 import 'package:flutter_video/network/local/entity/media.dart';
 import 'package:flutter_video/utils/file_util.dart';
@@ -40,5 +41,9 @@ class VideoRepository extends BaseRepository<Media, Video> {
       return true;
     }
     return false;
+  }
+
+  Future<String> download() async{
+    return await ApiProvider().downloadVideo();
   }
 }
