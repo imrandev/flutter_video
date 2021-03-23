@@ -41,6 +41,7 @@ class _ChewiePlayerState extends State<ChewieVideoPlayer> {
     VideoBloc _videoBloc = BlocProvider.of<VideoBloc>(context);
     if (Platform.isIOS) {
       filepath = await _videoBloc.webmToMp4(widget.video);
+      print("$filepath");
       if (filepath != null && filepath.isNotEmpty) {
         _videoPlayerController = VideoPlayerController.file(File("$filepath"));
       }
@@ -74,7 +75,7 @@ class _ChewiePlayerState extends State<ChewieVideoPlayer> {
   Widget build(BuildContext context) {
     return _chewieController != null &&
         _chewieController
-            .videoPlayerController.value.isInitialized
+            .videoPlayerController.value.initialized
         ? Chewie(
       controller: _chewieController,
     ) : Center(

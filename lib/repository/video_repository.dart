@@ -56,19 +56,8 @@ class VideoRepository extends BaseRepository<Media, Video> {
   }
 
   Future<String> webmToMp4(Media source) async {
-    Media exists = mediaDao.findMediaById(source.id) as Media;
-    if (exists == null) {
-      String filepath = await ApiProvider().webmToMp4(source.playbackUrl);
-      if (filepath != null && filepath.isNotEmpty) {
-        await add(new Video(
-          id: source.id,
-          playbackUrl: filepath,
-          title: source.title,
-          fileType: "mp4",
-        ));
-        return filepath;
-      }
-    }
-    return source.playbackUrl;
+    String filepath = await ApiProvider().webmToMp4(source.playbackUrl);
+    print("$filepath");
+    return filepath;
   }
 }

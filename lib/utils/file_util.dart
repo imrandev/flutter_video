@@ -16,9 +16,14 @@ class FileUtil {
   FileUtil._internal();
 
   Future<String> getFilePath(String fileType) async {
-    final Directory extDir = await getExternalStorageDirectory();
-    print("Document directory : ${extDir.path}");
-    final String dirPath = '${extDir.path}/Videos';
+    Directory directory;
+    if(Platform.isIOS){
+      directory = await getApplicationDocumentsDirectory();
+    } else {
+      directory = await getExternalStorageDirectory();
+    }
+    print("Document directory : ${directory.path}");
+    final String dirPath = '${directory.path}/Videos';
     await new Directory(dirPath).create(recursive: true);
     _filename = _timestamp();
     return '$dirPath/$_filename.$fileType';

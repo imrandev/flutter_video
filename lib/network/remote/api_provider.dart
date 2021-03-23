@@ -107,18 +107,14 @@ class ApiProvider {
     String savePath = await FileUtil().getFilePath("mp4");
     double percentage = 0.0;
     print("$savePath");
-    _dio.download(sourcePath, savePath, onReceiveProgress: (receive, total) {
+    await _dio.download(sourcePath, savePath, onReceiveProgress: (receive, total) {
       percentage = (receive * 100) / total;
       print("Downloaded ${percentage.floor()}%");
     }).then((response) {
       print("${response.data.toString()}");
-      if (percentage == 100) {
-        // return save file's local path
-        return savePath;
-      }
     }).catchError((e) {
       print("${e.toString()}");
     });
-    return null;
+    return savePath;
   }
 }
