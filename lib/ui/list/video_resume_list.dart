@@ -48,40 +48,44 @@ class VideoResumeList extends StatelessWidget {
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text(
-                    '${questionList[index].questionTextBng}',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        '${questionList[index].questionTextBng}',
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Icon(
+                              Icons.access_time
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "${questionList[index].questionDuration}s",
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                              Icons.visibility
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                              "${questionList[index].totalView}"
+                          )
+                        ],
+                      )
+                    ],
                   ),
                 ),
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.delete_outline,
-                    ),
-                    onPressed: () {
-
-                    },
-                  ),
-                  StreamBuilder<UploadResponse>(
-                    builder: (context, snapshot) {
-                      return snapshot.hasData && snapshot.data.statuscode == ApiStatus.crudSuccess
-                          ? Icon(
-                        Icons.check_circle_outline,
-                      ) : IconButton(
-                        icon: Icon(
-                          Icons.cloud_upload,
-                        ),
-                        onPressed: () {
-                          _videoBloc
-                              .uploadVideo(questionList[index].videoUrl);
-                        },
-                      );
-                    },
-                    stream: _videoBloc.fileUploadStream,
-                  ),
-                ],
               ),
             ),
           ),

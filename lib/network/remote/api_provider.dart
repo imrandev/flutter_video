@@ -25,17 +25,12 @@ class ApiProvider {
 
   ApiProvider._internal();
 
-  Future<QuestionResponse> findQuestions() async {
+  Future<QuestionResponse> findQuestions(Map<String, dynamic> requestBody) async {
     QuestionResponse _questionResponse = QuestionResponse();
     _dio.interceptors.add(LogInterceptor());
     await _dio.post(
       Constant.uploadVideoResumeQuestionList,
-      data: <String, dynamic>{
-        "userId" : "4361771",
-        "decodeId" : "S8A8Qw",
-        "appId" : "1",
-        "lang" : "EN"
-      },
+      data: requestBody,
       options: Options(
         method: 'POST',
         contentType: 'application/x-www-form-urlencoded',
@@ -106,5 +101,24 @@ class ApiProvider {
       _uploadResponse.message = e.toString();
     });
     return _uploadResponse;
+  }
+
+  Future<String> webmToMp4(String sourcePath) async {
+    String savePath = await FileUtil().getFilePath("mp4");
+    double percentage = 0.0;
+    print("$savePath");
+    _dio.download(sourcePath, savePath, onReceiveProgress: (receive, total) {
+      percentage = (receive * 100) / total;
+      print("Downloaded ${percentage.floor()}%");
+    }).then((response) {
+      print("${response.data.toString()}");
+      if (percentage == 100) {
+        // return save file's local path
+        return savePath;
+      }
+    }).catchError((e) {
+      print("${e.toString()}");
+    });
+    return null;
   }
 }

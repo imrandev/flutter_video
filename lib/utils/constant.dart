@@ -11,6 +11,9 @@ class Constant {
   static const String uploadVideoResumeAnswer = "/apps/mybdjobs/app_video_resume_upload_answer.asp";
   static const String uploadVideoResumeQuestionList = "/apps/mybdjobs/v1/app_video_resume_questionlist.asp";
 
+  static const String userId = "4777518";
+  static const String decodeId = "OTv6M6";
+
   static const int connectionTimeout = 5000;
   static const int receiveTimeout = 30000;
 }

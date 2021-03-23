@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_video/model/video.dart';
+import 'package:flutter_video/blocs/provider/bloc_provider.dart';
+import 'package:flutter_video/blocs/video_bloc.dart';
 import 'package:flutter_video/network/local/entity/media.dart';
 import 'package:video_player/video_player.dart';
 
@@ -33,11 +36,21 @@ class _ChewiePlayerState extends State<ChewieVideoPlayer> {
   }
 
   Future<void> initializePlayer() async {
-    _videoPlayerController = VideoPlayerController.network(
-        '${widget.video.playbackUrl}');
-    await Future.wait([
-      _videoPlayerController.initialize()
-    ]);
+    String filepath;
+
+    VideoBloc _videoBloc = BlocProvider.of<VideoBloc>(context);
+    if (Platform.isIOS) {
+      filepath = await _videoBloc.webmToMp4(widget.video);
+      if (filepath != null && filepath.isNotEmpty) {
+        _videoPlayerController = VideoPlayerController.file(File("$filepath"));
+      }
+    } else {
+      filepath = widget.video.playbackUrl;
+      _videoPlayerController = VideoPlayerController.network('$filepath');
+    }
+
+    await Future.wait([_videoPlayerController.initialize()]);
+
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       autoPlay: true,

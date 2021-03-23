@@ -51,7 +51,24 @@ class VideoRepository extends BaseRepository<Media, Video> {
     return ApiProvider().uploadFile(file);
   }
 
-  Future<QuestionResponse> fetchQuestionList(){
-    return ApiProvider().findQuestions();
+  Future<QuestionResponse> fetchQuestionList(Map<String, dynamic> requestBody){
+    return ApiProvider().findQuestions(requestBody);
+  }
+
+  Future<String> webmToMp4(Media source) async {
+    Media exists = mediaDao.findMediaById(source.id) as Media;
+    if (exists == null) {
+      String filepath = await ApiProvider().webmToMp4(source.playbackUrl);
+      if (filepath != null && filepath.isNotEmpty) {
+        await add(new Video(
+          id: source.id,
+          playbackUrl: filepath,
+          title: source.title,
+          fileType: "mp4",
+        ));
+        return filepath;
+      }
+    }
+    return source.playbackUrl;
   }
 }

@@ -9,6 +9,7 @@ import 'package:flutter_video/network/local/entity/media.dart';
 import 'package:flutter_video/network/remote/model/question_response.dart';
 import 'package:flutter_video/network/remote/model/upload_response.dart';
 import 'package:flutter_video/repository/video_repository.dart';
+import 'package:flutter_video/utils/constant.dart';
 import 'package:rxdart/rxdart.dart';
 
 class VideoBloc extends BlocBase {
@@ -38,6 +39,17 @@ class VideoBloc extends BlocBase {
   Function(QuestionResponse) get _questionsSink => _questionsBehavior.sink.add;
 
   VideoRepository _videoRepository;
+
+  @override
+  void init(BuildContext context) async {
+    /*_videoListSink(ApiProvider()
+        .parseJson(await ApiProvider().loadJsonFromLocalPath(context)));*/
+    // initialize database
+    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    // initialize repository
+    _videoRepository = new VideoRepository(database.mediaDao);
+    fetchQuestions();
+  }
 
   Future<List<CameraDescription>> initCam() async {
     return await availableCameras();
@@ -72,7 +84,13 @@ class VideoBloc extends BlocBase {
   }
 
   void fetchQuestions() async {
-    QuestionResponse _questionResponse = await _videoRepository.fetchQuestionList();
+    Map<String, dynamic> requestBody = <String, dynamic>{
+      "userId" : Constant.userId,
+      "decodeId" : Constant.decodeId,
+      "appId" : "1",
+      "lang" : "EN"
+    };
+    QuestionResponse _questionResponse = await _videoRepository.fetchQuestionList(requestBody);
     _questionsSink(_questionResponse);
   }
 
@@ -84,14 +102,7 @@ class VideoBloc extends BlocBase {
     _questionsBehavior.close();
   }
 
-  @override
-  void init(BuildContext context) async {
-    /*_videoListSink(ApiProvider()
-        .parseJson(await ApiProvider().loadJsonFromLocalPath(context)));*/
-    // initialize database
-    final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    // initialize repository
-    _videoRepository = new VideoRepository(database.mediaDao);
-    fetchQuestions();
+  Future<String> webmToMp4(Media source){
+    return _videoRepository.webmToMp4(source);
   }
 }
